@@ -18,17 +18,19 @@ putOptPnL = function(stock, strike, cost) {
 # Profit & loss plot for 4 different type of options
 stockPrice = seq(from = 0, to = 80)
 
+par(mfrow = c(2, 2))
+
 pnlOflongCall = sapply(stockPrice, callOptPnL, strike = 20, cost = 5)
-plot(stockPrice, pnlOflongCall, type = "l"); abline(h = 0, lty = 2)
+plot(stockPrice, pnlOflongCall, type = "l", main = "long call"); abline(h = 0, lty = 2)
 
 pnlOflongPut = sapply(stockPrice, putOptPnL, strike = 20, cost = 5)
-plot(stockPrice, pnlOflongPut, type = "l"); abline(h = 0, lty = 2)
+plot(stockPrice, pnlOflongPut, type = "l", main = "long put"); abline(h = 0, lty = 2)
 
 pnlOfshortCall = -sapply(stockPrice, callOptPnL, strike = 20, cost = 5)
-plot(stockPrice, pnlOfshortCall, type = "l"); abline(h = 0, lty = 2)
+plot(stockPrice, pnlOfshortCall, type = "l", main = "short call"); abline(h = 0, lty = 2)
 
 pnlOfshortPut = -sapply(stockPrice, putOptPnL, strike = 20, cost = 5)
-plot(stockPrice, pnlOfshortPut, type = "l"); abline(h = 0, lty = 2)
+plot(stockPrice, pnlOfshortPut, type = "l", main = "short put"); abline(h = 0, lty = 2)
 
 ### Vertical call
 #   long call (low strike) + short call (higher)
@@ -68,3 +70,13 @@ plot(stockPrice, totalPayoff, type = "l", main = "butterfly"); abline(h = 0, lty
 
 ### Condor
 #  two different strangles
+#   strangle 1
+pnlOflong_put        = sapply(stockPrice, putOptPnL, strike = 30, cost = 2)
+pnlOflong_call       = sapply(stockPrice, callOptPnL, strike = 70, cost = 8)
+payoff_longstrangle  = pnlOflong_put + pnlOflong_call
+#   strangle 2
+pnlOfshort_put       = -sapply(stockPrice, putOptPnL, strike = 40, cost = 6)
+pnlOfshort_call      = -sapply(stockPrice, callOptPnL, strike = 60, cost = 7)
+payoff_shortstrangle = pnlOfshort_put + pnlOfshort_call
+payoff               = payoff_longstrangle + payoff_shortstrangle
+plot(stockPrice, payoff, type = "l", main = "condor"); abline(h = 0, lty = 2)
